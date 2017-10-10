@@ -1,0 +1,141 @@
+body { padding: 0px; margin: 0px; font-family: Roboto; height: 100%; position: absolute; width: 100%; background-color: #f2f4f7; }
+
+.link { background-color: transparent; outline: 5px solid transparent; transition: all 0.3s; text-decoration: none; color: inherit; }
+.link:active { background-color: #EFEFEF; outline: 5px solid #EFEFEF; transition: none }
+
+#Logo { margin: auto; color: #4c31ff; width: 100px; text-align: center; font-size: 25px; margin-bottom: 40px; font-weight: 100; margin-top: 30px; font-family: Consolas, Monaco, monospace; text-transform: uppercase; letter-spacing: 2px; }
+#Logo .up { background-color: #4c31ff; padding: 11px 13px; color: white; margin-left: 10px; }
+
+textarea { color: #4c31ff; text-decoration: none; font-family: Roboto; width: 100%; padding: 5px; border: 1px solid #CCC; padding: 10px; box-sizing: border-box; overflow: hidden; }
+textarea:focus { outline: none; border-color: #AAA }
+
+.button-big {
+	text-decoration: none; font-weight: bold; font-family: Roboto; font-size: 15px; margin-top: 10px;
+	background-color: #FFEB3B; color: black; padding: 15px 40px; display: inline-block; border-radius: 4px; border-bottom: 2px solid #e4d12b;
+}
+.button-big:hover { border-bottom: 2px solid #c4b10b; transition: none !important }
+.button-big:active { transform: translateY(1px) !important; transition: none !important; border-bottom: 2px solid #e4d12b; }
+
+.Selector { width: 300px; margin: auto; top: 50%; position: relative; text-align: center; margin-top: -70px; transition: all 0.6s; display: none; pointer-events: none }
+.Selector.hidden { opacity: 0; transform: scale(0.5); pointer-events: none }
+.Selector .dropzone { width: 100%; height: 100%; border: 1px solid #EEE; position: fixed; top: 0px; left: 0px; z-index: -1 }
+.Selector .browse .file-input { display: none; }
+.Selector .browse .button {
+	text-decoration: none; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;
+	font-size: 29px; color: #0F74F1; border-bottom: 2px solid #EEE; transition: all 0.3s; line-height: 50px;
+}
+.Selector .browse .button:hover { border-color: #0F74F1; transition: none }
+.Selector .browse .button:active { background-color: #EEE; outline: 4px solid #EEE }
+.Selector .browse .icon-upload { background-color: #0F74F1; fill: white; padding: 0px; outline: 32px solid #0F74F1; display: block; margin: auto; margin-bottom: 62px;  }
+
+.Bg { position: fixed; top: 0px; left: 0px; z-index: -1; pointer-events: none; background: linear-gradient(35deg, #FFF, #dde0ea); width: 100%; height: 100% }
+.Bg .icon { position: absolute; top: 0px; left: 0px; width: 122px; height: 122px; visibility: hidden }
+
+.Uploader { width: 100%; height: 100%; position: fixed; top: 0px; transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); background-color: rgba(255,255,255,0.9); opacity: 1; }
+.Uploader.hidden { opacity: 0; transform: scale(1.5); pointer-events: none }
+
+/*.Uploader .blobs { filter: blur(16px) contrast(31) hue-rotate(-400deg); background-color: white; width: 100%; height: 100% }
+.Uploader .blob {
+	width: 50px; height: 50px; background-color: #cc5815; margin-left: -40px; margin-top: -40px; left: -10%; top: -10%;
+	position: absolute; padding: 0px; margin: 0px; border-radius: 100px; transform: translateX(-50%) translateY(-50%);
+}
+.Uploader .blob-center { background-color: #ff0000; width: 200px; height: 200px; margin-left: -100px; margin-top: -100px; left: 50%; top: 50%; transform: scale(0.5); transition: all 0.3s }
+.Uploader .percent {
+	text-align: center; top: 50%; position: absolute; color: white; z-index: 999;
+	width: 100%; font-size: 80px; line-height: 0px; transition: all 0.3s;
+}
+*/
+
+.Uploader .speed { width: 600px; margin: auto; top: 50%; position: relative; margin-top: -300px; }
+.Uploader .speed svg { width: 600px; height: 500px }
+.Uploader .speed-bg {
+	stroke-dasharray: 1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,310;
+    stroke-dashoffset: 87; stroke-width: 10px; stroke-opacity: 0.5; fill: transparent; /*transform: rotateZ(-72.7deg); transform-origin: center;*/
+}
+.Uploader .speed-bg-big {
+	stroke-dasharray: 2,106,2,106,2,107,2,107,2,107,2,106,2,3000;
+    stroke-width: 20px; stroke-dashoffset: 0; /*transform: rotateZ(149.3deg);*/ stroke-opacity: 1; stroke: #999;
+}
+.Uploader .speed-text { fill: #999; font-size: 13px; }
+.Uploader .speed-current {
+	fill: transparent; stroke-dasharray: 2400,1151; stroke-dashoffset: 2399; /*transform: rotateZ(-210deg);*/
+	/*transform-origin: center;*/ stroke-width: 18px; stroke-linecap: round; z-index: 999; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.Uploader .status { position: relative; width: 400px; margin: auto; text-align: center; top: 50%; margin-top: -260px; height: 300px; font-size: 12px; font-family: Consolas, Monaco, monospace; }
+.Uploader .status .percent { color: #666; text-align: right; position: absolute; width: 152px; top: 0px; margin-top: -9px; transition: all 1s }
+.Uploader .status .icon-file-empty { font-size: 8px; text-align: left; padding-left: 19px; box-sizing: border-box; font-family: Consolas, Monaco, monospace; padding-top: 7px; padding-right: 20px; word-wrap: break-word; }
+.Uploader .status .file-bg { opacity: 0.1; margin-bottom: 20px }
+.Uploader .status .file-fg { opacity: 0.5; position: absolute; transition: all 1s }
+.Uploader .status .name { width: 170px; margin: auto; word-wrap: break-word; }
+.Uploader .status .size { color: #999; margin: 4px; }
+.Uploader .status .message { margin: 10px; }
+.Uploader .button-finish { opacity: 0; pointer-events: none; transition: all 0.6s; transform: translateY(-30px); }
+.Uploader .button-finish.visible { opacity: 1; pointer-events: inherit; transform: translateY(0px); }
+
+.List {
+	width: 100%; max-width: 1000px; min-width: 500px; margin: auto; box-shadow: 0px 10px 75px #e0e4f7; transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+	background: linear-gradient(-335deg, rgba(255, 255, 255, 0.65), rgba(229, 233, 251, 0.5)); margin-bottom: 50px;
+}
+.List.hidden { opacity: 0; transform: scale(0.5); pointer-events: none }
+.List h1 { font-family: Roboto; font-weight: lighter; padding: 25px; margin: 0px; }
+.List h2 { font-weight: lighter; text-align: center; padding: 150px; }
+.List .upload {
+	width: 200px; display: block; background-color: white; padding: 13px 5px; text-align: center; text-decoration: none; transition: all 0.3s;
+	color: #000000; margin-top: -40px; text-transform: uppercase; background: #70FCD8; font-size: 15px; font-weight: lighter; letter-spacing: 1px; margin-left: auto;
+}
+.List .upload:active { box-shadow: inset 0px 10px 25px -20px black; transform: translateY(1px); padding-bottom: 12px; margin-bottom: 1px; transition: none; background-color: #70FCD8 }
+.List .icon-upload { width: 15px; height: 15px; margin-right: 12px; }
+.List .upload .upload-title { border-bottom: 1px solid transparent; transition: all 0.3s }
+.List .upload:hover .upload-title { border-bottom: 1px solid black; transition: none }
+.List .list-bg { width: 11%; background-color: rgba(235, 241, 245, 0.5) }
+.List .files { min-width: 600px; padding: 15px; background-color: white }
+.List .files .header { border: 0px; box-shadow: none; padding-bottom: 17px; padding-top: 0px; }
+.List .files .header .stats-col { font-size: 11px; font-weight: normal; letter-spacing: 0.5px; font-family: Consolas, Monaco, monospace; color: #888; text-transform: uppercase; }
+.List .file { border-bottom: 1px solid #eaf0f5; padding-bottom: 15px; box-shadow: 0px 7px 15px -10px #DDD; padding-top: 20px; clear: both }
+.List .file:last-child { box-shadow: none; border: none; margin-bottom: 0px }
+/*.List .file .type {
+	background: linear-gradient(45deg, #F44336, #E91E63); display: inline-block; float: left; padding: 18px 0px; width: 120px; text-align: center;
+	font-family: Consolas, Monaco, monospace; color: white; border-radius: 3px; margin-right: 13px;
+}*/
+.List .file .open {
+	float: left; width: 45px; height: 45px; line-height: 45px; text-align: center; border-radius: 50px; border: 1px solid #EEE;
+	color: #0012ff; margin-right: 15px; text-decoration: none; transition: all 0.3s; font-size: 32px; line-height: 41px;
+}
+.List .file .open.need { font-weight: lighter; }
+.List .file .open:hover { border-color: #9282ff; transition: none }
+.List .file .open .icon-open-new { vertical-align: -4px }
+.List .file .title {
+	font-size: 18px; color: #4c31ff; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.3s;
+	white-space: nowrap; max-width: 100%; display: table-caption; text-overflow: ellipsis;
+}
+.List .file .left-info { display: inline-block; width: calc(100% - 270px); padding-top: 5px; padding-left: 5px; margin-left: -5px; margin-top: -5px; overflow: hidden }
+.List .file .editable { width: 100%; display: block; }
+.List .file textarea { font-size: 18px; }
+.List .file .title:hover { border-color: #4c31ff; transition: none }
+.List .file .details { font-size: 13px; color: #666; white-space: nowrap; margin-top: 4px; padding-bottom: 4px; margin-bottom: -4px; }
+.List .file .username { text-transform: capitalize; font-weight: bold }
+.List .file .details .detail:before { content: "\2022"; margin: 5px; font-size: 8px; display: inline-block; vertical-align: 1px; }
+.List .file .details .detail:first-child:before { content: ""; margin: 0px }
+.List .file .size { transition: box-shadow 1s, background-color 1s }
+.List .file .size.downloading, .List .file .size.partial { padding: 3px 5px; width: 150px; display: inline-block; text-align: center; background-color: #f1f1f1; line-height: 13px; }
+.List .file .seeding { text-transform: uppercase; margin-right: 5px; font-weight: bold; color: #4CAF50; }
+.List .file .seeding:before { content: "\25CF"; color: #4CAF50; vertical-align: 1px; line-height: 0px; margin: 5px; font-size: 12px; }
+.List .file .add { text-transform: uppercase; margin-right: 5px; color: #4c31ff; text-decoration: none; border: 1px solid #d8d8d8; padding: 2px 10px; border-radius: 22px; font-weight: normal; transition: all 0.3s }
+.List .file .add:hover { border-color: #7a66ff; transition: none }
+.List .file .add:active { background-color: #FAFAFA; transition: none }
+
+.List .file .stats { float: right; text-align: right; font-size: 14px; line-height: 26px; font-weight: lighter; letter-spacing: 1px; margin-left: -20px }
+.List .file .stats-col { float: left; margin-left: 20px; width: 95px }
+.List .file .peers { text-align: right; text-transform: uppercase; width: 50px; }
+.List .file .peers .value { margin-left: 5px }
+.List .file .ratio { text-transform: uppercase; width: 20px; }
+.List .file .ratio .value {
+	background-color: #8BC34A; padding: 3px; border-radius: 25px; color: white; width: 26px;
+	font-weight: bold; letter-spacing: 0px; margin-left: 2px; display: inline-block; text-align: center; margin-top: -3px;
+}
+.List .file .filename.link { border-bottom: 1px solid #EEE }
+
+.drag-over .List { outline: 3px dashed black; opacity: 0.2 }
+#droptext { display: none; position: fixed; text-align: center; margin-top: 230px; color: black; z-index: 99; width: 100%; pointer-events: none }
+#droptext .title { font-size: 48px; background-color: #70FCD8; padding: 15px 30px; text-transform: uppercase; display: inline-block; font-weight: lighter; }
+.drag-over #droptext { display: block }

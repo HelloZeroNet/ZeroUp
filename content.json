@@ -1,0 +1,44 @@
+{
+ "address": "1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc",
+ "address_index": 89091714,
+ "background-color": "#FFF",
+ "clone_root": "template-new",
+ "cloned_from": "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
+ "description": "",
+ "files": {
+  "css/all.css": {
+   "sha512": "dfc5bf0f5bfb30c56a0a32adc400b42ccd90a9a795ed122f0310330846c7a174",
+   "size": 170152
+  },
+  "dbschema.json": {
+   "sha512": "596519604f8d34d750da86ada7ab618499b9257e2db30af546725d8784f70e3d",
+   "size": 978
+  },
+  "index.html": {
+   "sha512": "86db9821b7bb669135416cefc255f57ea9f703e3c4061c184a4bb05751e8ef5d",
+   "size": 1124
+  },
+  "js/all.js": {
+   "sha512": "d5eb71fd4717f2622a7081cad90783b4e9db91c08a49fcdf66037d933c56ff7e",
+   "size": 125731
+  }
+ },
+ "ignore": "((js|css)/(?!all.(js|css))|data/.*)",
+ "includes": {
+  "data/users/content.json": {
+   "signers": [],
+   "signers_required": 1
+  }
+ },
+ "inner_path": "content.json",
+ "modified": 1507240116,
+ "postmessage_nonce_security": true,
+ "signers_sign": "G92h5e3FmtEMZgSdewI3esFkw8ny/m9KuSQ0IwFgVMcafUaepy2HF0oiCYmYd2CVmZHGF45WAxBz6zxJEU1AngE=",
+ "signs": {
+  "1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc": "HKVyKiAdLbBa/3cwQ/aT50hHjIKI6dUKEkuEOZlymY+uU3Y1tEcsEzRMB39rEsvm/1CjXh+e02DWXRpVGm4fOaA="
+ },
+ "signs_required": 1,
+ "title": "ZeroUp",
+ "translate": ["js/all.js"],
+ "zeronet_version": "0.6.0"
+}

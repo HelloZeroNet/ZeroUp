@@ -1,0 +1,8 @@
+# Hidden files
+.*
+!/.gitignore
+!/.travis.yml
+
+
+# Database
+*.db
