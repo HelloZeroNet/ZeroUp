@@ -99,9 +99,15 @@ class File
 		else
 			type = "other"
 
+		peer_num = Math.max(@row.stats.peer_seed + @row.stats.peer_leech, @row.stats.peer or 0)
+		low_seeds = @row.stats.peer_seed <= peer_num * 0.1 and @row.stats.peer_leech >= peer_num * 0.2
+
 		h("div.file.#{type}", {key: @row.id, enterAnimation: Animation.slideDown, exitAnimation: Animation.slideUp},
 			h("div.stats", [
-				h("div.stats-col.peers", {title: "Seeder: #{@row.stats.peer_seed}, Leecher: #{@row.stats.peer_leech}"}, [h("span.value", @row.stats.peer or 0), h("span.icon.icon-profile")]),
+				h("div.stats-col.peers", {title: "Seeder: #{@row.stats.peer_seed}, Leecher: #{@row.stats.peer_leech}"}, [
+					h("span.value", peer_num),
+					h("span.icon.icon-profile", {style: if low_seeds then "background: #f57676" else "background: #666"})
+				]),
 				h("div.stats-col.ratio", h("span.value", {"style": "background-color: #{ratio_color}"}, if ratio >= 10 then ratio.toFixed(0) else ratio.toFixed(1)))
 				h("div.stats-col.uploaded", "\u2BA5 #{Text.formatSize(@row.stats.uploaded)}")
 			])
