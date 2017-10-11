@@ -5,6 +5,7 @@ class List extends Class
 		@need_update = true
 		@loaded = false
 		@type = "Popular"
+		@limit = 10
 
 
 	needFile: =>
@@ -41,6 +42,10 @@ class List extends Class
 				@loaded = true
 				Page.projector.scheduleRender()
 
+	handleMoreClick: =>
+		@limit += 20
+		return false
+
 	render: =>
 		if @need_update
 			@update()
@@ -60,11 +65,13 @@ class List extends Class
 						h("div.stats-col.downloaded", "Uploaded")
 					])
 				),
-				@files.map (file) =>
+				@files[0..@limit].map (file) =>
 					file.render()
 			])
 			if @loaded and not @files.length
 				h("h2", "No files submitted yet")
+			if @files.length > @limit
+				h("a.more.link", {href: "#", onclick: @handleMoreClick}, "Show more...")
 		])
 
 window.List = List
