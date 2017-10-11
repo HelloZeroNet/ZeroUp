@@ -35,7 +35,7 @@ class List extends Class
 
 				if order == "peer"
 					files_res.sort (a,b) ->
-						return b.stats["peer"] - a.stats["peer"]
+						return b.stats["peer_seed"] + b.stats["peer"] - a.stats["peer"] - a.stats["peer_seed"]
 
 				@item_list.sync(files_res)
 				@loaded = true
