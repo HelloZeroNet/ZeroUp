@@ -40,7 +40,7 @@ class Selector extends Class
 			Page.cmd "fileWrite", [inner_path, Text.fileEncode(res)], cb
 
 	handleUploadDone: (file) =>
-		Page.list.order = "date_added"
+		Page.setUrl("?Latest")
 		@log "Upload done", file
 
 	uploadFile: (file) =>
