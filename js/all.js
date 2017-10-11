@@ -2567,7 +2567,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
     };
 
     File.prototype.render = function() {
-      var ext, ratio, ratio_color, ref, ref1, ref2, ref3, style, type;
+      var ext, low_seeds, peer_num, ratio, ratio_color, ref, ref1, ref2, ref3, style, type;
       if (this.row.stats.bytes_downloaded) {
         ratio = this.row.stats.uploaded / this.row.stats.bytes_downloaded;
       } else {
@@ -2585,6 +2585,8 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       } else {
         type = "other";
       }
+      peer_num = Math.max(this.row.stats.peer_seed + this.row.stats.peer_leech, this.row.stats.peer || 0);
+      low_seeds = this.row.stats.peer_seed <= peer_num * 0.1 && this.row.stats.peer_leech >= peer_num * 0.2;
       return h("div.file." + type, {
         key: this.row.id,
         enterAnimation: Animation.slideDown,
@@ -2592,7 +2594,11 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       }, h("div.stats", [
         h("div.stats-col.peers", {
           title: "Seeder: " + this.row.stats.peer_seed + ", Leecher: " + this.row.stats.peer_leech
-        }, [h("span.value", this.row.stats.peer || 0), h("span.icon.icon-profile")]), h("div.stats-col.ratio", h("span.value", {
+        }, [
+          h("span.value", peer_num), h("span.icon.icon-profile", {
+            style: low_seeds ? "background: #f57676" : "background: #666"
+          })
+        ]), h("div.stats-col.ratio", h("span.value", {
           "style": "background-color: " + ratio_color
         }, ratio >= 10 ? ratio.toFixed(0) : ratio.toFixed(1))), h("div.stats-col.uploaded", "\u2BA5 " + (Text.formatSize(this.row.stats.uploaded)))
       ]), type === "video" ? h("a.open", {
@@ -2653,13 +2659,15 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 
     function List() {
       this.render = bind(this.render, this);
+      this.handleMoreClick = bind(this.handleMoreClick, this);
       this.update = bind(this.update, this);
       this.needFile = bind(this.needFile, this);
       this.item_list = new ItemList(File, "id");
       this.files = this.item_list.items;
       this.need_update = true;
       this.loaded = false;
-      this.order = "peer";
+      this.type = "Popular";
+      this.limit = 10;
     }
 
     List.prototype.needFile = function() {
@@ -2668,7 +2676,13 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
     };
 
     List.prototype.update = function() {
+      var order;
       this.log("update");
+      if (this.type === "Popular") {
+        order = "peer";
+      } else {
+        order = "date_added";
+      }
       return Page.cmd("dbQuery", "SELECT * FROM file LEFT JOIN json USING (json_id) ORDER BY date_added DESC", (function(_this) {
         return function(files_res) {
           return Page.cmd("optionalFileList", {
@@ -2694,9 +2708,9 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
                 };
               }
             }
-            if (_this.order === "peer") {
+            if (order === "peer") {
               files_res.sort(function(a, b) {
-                return b.stats["peer"] - a.stats["peer"];
+                return b.stats["peer_seed"] + b.stats["peer"] - a.stats["peer"] - a.stats["peer_seed"];
               });
             }
             _this.item_list.sync(files_res);
@@ -2705,6 +2719,11 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           });
         };
       })(this));
+    };
+
+    List.prototype.handleMoreClick = function() {
+      this.limit += 20;
+      return false;
     };
 
     List.prototype.render = function() {
@@ -2720,16 +2739,33 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           hidden: Page.state.page !== "list"
         }
       }, [
-        this.order === "date_added" ? h("h1", "Latest uploads") : h("h1", "Popular uploads"), h("a.upload", {
+        h("div.list-types", [
+          h("a.list-type", {
+            href: "?Popular",
+            onclick: Page.handleLinkClick,
+            classes: {
+              active: this.type === "Popular"
+            }
+          }, "Popular"), h("a.list-type", {
+            href: "?Latest",
+            onclick: Page.handleLinkClick,
+            classes: {
+              active: this.type === "Latest"
+            }
+          }, "Latest")
+        ]), h("a.upload", {
           href: "#",
           onclick: Page.selector.handleBrowseClick
         }, [h("div.icon.icon-upload"), h("span.upload-title", "Upload new file")]), this.files.length ? h("div.files", [
-          h("div.file.header", h("div.stats", [h("div.stats-col.peers", "Peers"), h("div.stats-col.ratio", "Ratio"), h("div.stats-col.downloaded", "Uploaded")])), this.files.map((function(_this) {
+          h("div.file.header", h("div.stats", [h("div.stats-col.peers", "Peers"), h("div.stats-col.ratio", "Ratio"), h("div.stats-col.downloaded", "Uploaded")])), this.files.slice(0, +this.limit + 1 || 9e9).map((function(_this) {
             return function(file) {
               return file.render();
             };
           })(this))
-        ]) : void 0, this.loaded && !this.files.length ? h("h2", "No files submitted yet") : void 0
+        ]) : void 0, this.loaded && !this.files.length ? h("h2", "No files submitted yet") : void 0, this.files.length > this.limit ? h("a.more.link", {
+          href: "#",
+          onclick: this.handleMoreClick
+        }, "Show more...") : void 0
       ]);
     };
 
@@ -2831,7 +2867,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
     };
 
     Selector.prototype.handleUploadDone = function(file) {
-      Page.list.order = "date_added";
+      Page.setUrl("?Latest");
       return this.log("Upload done", file);
     };
 
@@ -3091,6 +3127,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
     extend(ZeroUp, superClass);
 
     function ZeroUp() {
+      this.handleLinkClick = bind(this.handleLinkClick, this);
       this.updateSiteInfo = bind(this.updateSiteInfo, this);
       this.onOpenWebsocket = bind(this.onOpenWebsocket, this);
       return ZeroUp.__super__.constructor.apply(this, arguments);
@@ -3100,14 +3137,23 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       this.bg = new Bg($("#Bg"));
       this.state = {};
       this.state.page = "list";
-      return this.on_site_info = new Promise();
+      this.on_site_info = new Promise();
+      return this.on_loaded = new Promise();
     };
 
     ZeroUp.prototype.createProjector = function() {
+      var url;
       this.projector = maquette.createProjector();
       this.list = new List();
       this.selector = new Selector();
       this.uploader = new Uploader();
+      if (base.href.indexOf("?") === -1) {
+        this.route("");
+      } else {
+        url = base.href.replace(/.*?\?/, "");
+        this.route(url);
+        this.history_state["url"] = url;
+      }
       this.projector.replace($("#List"), this.list.render);
       return this.projector.replace($("#Uploader"), this.uploader.render);
     };
@@ -3155,9 +3201,82 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
             };
           })(this));
         }
+      } else if (cmd === "wrapperPopState") {
+        if (params.state) {
+          if (!params.state.url) {
+            params.state.url = params.href.replace(/.*\?/, "");
+          }
+          this.on_loaded.resolved = false;
+          document.body.className = "";
+          window.scroll(window.pageXOffset, params.state.scrollTop || 0);
+          return this.route(params.state.url || "");
+        }
       } else {
         return this.log("Unknown command", cmd, params);
       }
+    };
+
+    ZeroUp.prototype.route = function(query) {
+      this.params = Text.queryParse(query);
+      this.log("Route", this.params);
+      this.content = this.list;
+      if (this.params.url) {
+        this.list.type = this.params.url;
+      }
+      this.content.limit = 10;
+      this.content.need_update = true;
+      return this.projector.scheduleRender();
+    };
+
+    ZeroUp.prototype.setUrl = function(url, mode) {
+      if (mode == null) {
+        mode = "push";
+      }
+      url = url.replace(/.*?\?/, "");
+      this.log("setUrl", this.history_state["url"], "->", url);
+      if (this.history_state["url"] === url) {
+        this.content.update();
+        return false;
+      }
+      this.history_state["url"] = url;
+      if (mode === "replace") {
+        this.cmd("wrapperReplaceState", [this.history_state, "", url]);
+      } else {
+        this.cmd("wrapperPushState", [this.history_state, "", url]);
+      }
+      this.route(url);
+      return false;
+    };
+
+    ZeroUp.prototype.handleLinkClick = function(e) {
+      if (e.which === 2) {
+        return true;
+      } else {
+        this.log("save scrollTop", window.pageYOffset);
+        this.history_state["scrollTop"] = window.pageYOffset;
+        this.cmd("wrapperReplaceState", [this.history_state, null]);
+        window.scroll(window.pageXOffset, 0);
+        this.history_state["scrollTop"] = 0;
+        this.on_loaded.resolved = false;
+        document.body.className = "";
+        this.setUrl(e.currentTarget.search);
+        return false;
+      }
+    };
+
+    ZeroUp.prototype.createUrl = function(key, val) {
+      var params, vals;
+      params = JSON.parse(JSON.stringify(this.params));
+      if (typeof key === "Object") {
+        vals = key;
+        for (key in keys) {
+          val = keys[key];
+          params[key] = val;
+        }
+      } else {
+        params[key] = val;
+      }
+      return "?" + Text.queryEncode(params);
     };
 
     return ZeroUp;

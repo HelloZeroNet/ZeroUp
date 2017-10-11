@@ -217,12 +217,16 @@ textarea:focus { outline: none; border-color: #AAA }
 .Uploader .button-finish { opacity: 0; pointer-events: none; -webkit-transition: all 0.6s; -moz-transition: all 0.6s; -o-transition: all 0.6s; -ms-transition: all 0.6s; transition: all 0.6s ; -webkit-transform: translateY(-30px); -moz-transform: translateY(-30px); -o-transform: translateY(-30px); -ms-transform: translateY(-30px); transform: translateY(-30px) ; }
 .Uploader .button-finish.visible { opacity: 1; pointer-events: inherit; -webkit-transform: translateY(0px); -moz-transform: translateY(0px); -o-transform: translateY(0px); -ms-transform: translateY(0px); transform: translateY(0px) ; }
 
+.list-types { font-family: Roboto; font-weight: lighter; padding: 25px; margin: 0px; font-size: 23px; }
+.list-type { margin-right: 20px; text-decoration: none; color: black; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; -o-transition: all 0.3s; -ms-transition: all 0.3s; transition: all 0.3s ; border-bottom: 2px solid transparent }
+.list-type:hover, .list-type.active { border-bottom: 2px solid #4c31ff; color: #4c31ff; -webkit-transition: none; -moz-transition: none; -o-transition: none; -ms-transition: none; transition: none ; }
+
 .List {
 	width: 100%; max-width: 1000px; min-width: 500px; margin: auto; -webkit-box-shadow: 0px 10px 75px #e0e4f7; -moz-box-shadow: 0px 10px 75px #e0e4f7; -o-box-shadow: 0px 10px 75px #e0e4f7; -ms-box-shadow: 0px 10px 75px #e0e4f7; box-shadow: 0px 10px 75px #e0e4f7 ; -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) ;
 	background: -webkit-linear-gradient(-335deg, rgba(255, 255, 255, 0.65), rgba(229, 233, 251, 0.5));background: -moz-linear-gradient(-335deg, rgba(255, 255, 255, 0.65), rgba(229, 233, 251, 0.5));background: -o-linear-gradient(-335deg, rgba(255, 255, 255, 0.65), rgba(229, 233, 251, 0.5));background: -ms-linear-gradient(-335deg, rgba(255, 255, 255, 0.65), rgba(229, 233, 251, 0.5));background: linear-gradient(-335deg, rgba(255, 255, 255, 0.65), rgba(229, 233, 251, 0.5)); margin-bottom: 50px;
 }
 .List.hidden { opacity: 0; -webkit-transform: scale(0.5); -moz-transform: scale(0.5); -o-transform: scale(0.5); -ms-transform: scale(0.5); transform: scale(0.5) ; pointer-events: none }
-.List h1 { font-family: Roboto; font-weight: lighter; padding: 25px; margin: 0px; }
+.List .list-types { font-family: Roboto; font-weight: lighter; padding: 25px; margin: 0px; }
 .List h2 { font-weight: lighter; text-align: center; padding: 150px; }
 .List .upload {
 	width: 200px; display: block; background-color: white; padding: 13px 5px; text-align: center; text-decoration: none; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; -o-transition: all 0.3s; -ms-transition: all 0.3s; transition: all 0.3s ;
@@ -279,6 +283,7 @@ textarea:focus { outline: none; border-color: #AAA }
 	font-weight: bold; letter-spacing: 0px; margin-left: 2px; display: inline-block; text-align: center; margin-top: -3px;
 }
 .List .file .filename.link { border-bottom: 1px solid #EEE }
+.List .more { text-align: center; display: block; padding: 20px; }
 
 .drag-over .List { outline: 3px dashed black; opacity: 0.2 }
 #droptext { display: none; position: fixed; text-align: center; margin-top: 230px; color: black; z-index: 99; width: 100%; pointer-events: none }
