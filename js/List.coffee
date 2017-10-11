@@ -4,7 +4,7 @@ class List extends Class
 		@files = @item_list.items
 		@need_update = true
 		@loaded = false
-		@order = "peer"
+		@type = "Popular"
 
 
 	needFile: =>
@@ -13,6 +13,12 @@ class List extends Class
 
 	update: =>
 		@log "update"
+
+		if @type == "Popular"
+			order = "peer"
+		else
+			order = "date_added"
+
 		Page.cmd "dbQuery", "SELECT * FROM file LEFT JOIN json USING (json_id) ORDER BY date_added DESC", (files_res) =>
 			Page.cmd "optionalFileList", {filter: "", limit: 1000}, (stat_res) =>
 				stats = {}
@@ -27,7 +33,7 @@ class List extends Class
 					file.stats = stats[file.inner_path]
 					file.stats ?= {"peer": 0}
 
-				if @order == "peer"
+				if order == "peer"
 					files_res.sort (a,b) ->
 						return b.stats["peer"] - a.stats["peer"]
 
