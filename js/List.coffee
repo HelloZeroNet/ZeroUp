@@ -52,10 +52,10 @@ class List extends Class
 			@need_update = false
 
 		h("div.List", {ondragenter: document.body.ondragover, ondragover: document.body.ondragover, ondrop: Page.selector.handleFileDrop, classes: {hidden: Page.state.page != "list"}}, [
-			if @order == "date_added"
-				h("h1", "Latest uploads")
-			else
-				h("h1", "Popular uploads")
+			h("div.list-types", [
+				h("a.list-type", {href: "?Popular", onclick: Page.handleLinkClick, classes: {active: @type == "Popular"}}, "Popular"),
+				h("a.list-type", {href: "?Latest", onclick: Page.handleLinkClick, classes: {active: @type == "Latest"}}, "Latest"),
+			]),
 			h("a.upload", {href: "#", onclick: Page.selector.handleBrowseClick}, [h("div.icon.icon-upload"), h("span.upload-title", "Upload new file")]),
 			if @files.length then h("div.files", [
 				h("div.file.header",
