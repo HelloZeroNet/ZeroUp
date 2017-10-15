@@ -32,11 +32,14 @@ class List extends Class
 					file.data_inner_path = "data/users/#{file.directory}/data.json"
 					file.content_inner_path = "data/users/#{file.directory}/content.json"
 					file.stats = stats[file.inner_path]
-					file.stats ?= {"peer": 0}
+					file.stats ?= {}
+					file.stats.peer ?= 0
+					file.stats.peer_seed ?= 0
+					file.stats.peer_leech ?= 0
 
 				if order == "peer"
 					files_res.sort (a,b) ->
-						return b.stats["peer_seed"] + b.stats["peer"] - a.stats["peer"] - a.stats["peer_seed"]
+						return Math.min(5, b.stats["peer_seed"]) + b.stats["peer"] - a.stats["peer"] - Math.min(5, a.stats["peer_seed"])
 
 				@item_list.sync(files_res)
 				@loaded = true
