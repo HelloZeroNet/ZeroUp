@@ -2,6 +2,7 @@ class File
 	constructor: (row, @item_list) ->
 		@editable_title = null
 		@status = "unknown"
+		@menu = null
 		@setRow(row)
 
 	getRatioColor: (ratio) ->
@@ -29,7 +30,7 @@ class File
 	deleteFile: (cb) =>
 		Page.cmd "optionalFileDelete", @row.inner_path, =>
 			Page.cmd "optionalFileDelete", @row.inner_path + ".piecemap.msgpack", =>
-				cb(true)
+				cb?(true)
 
 	deleteFromContentJson: (cb) =>
 		Page.cmd "fileGet", @row.content_inner_path, (res) =>
@@ -37,7 +38,7 @@ class File
 			delete data["files_optional"][@row.file_name]
 			delete data["files_optional"][@row.file_name+ ".piecemap.msgpack"]
 			Page.cmd "fileWrite", [@row.content_inner_path, Text.fileEncode(data)], (res) =>
-				cb(res)
+				cb?(res)
 
 	deleteFromDataJson: (cb) =>
 		Page.cmd "fileGet", @row.data_inner_path, (res) =>
@@ -45,7 +46,7 @@ class File
 			delete data["file"][@row.file_name]
 			delete data["file"][@row.file_name+ ".piecemap.msgpack"]
 			Page.cmd "fileWrite", [@row.data_inner_path, Text.fileEncode(data)], (res) =>
-				cb(res)
+				cb?(res)
 
 	handleDelete: (cb) =>
 		@deleteFile (res) =>
@@ -80,6 +81,17 @@ class File
 		Page.cmd "serverShowdirectory", ["site", @row.inner_path]
 		return false
 
+	handleMenuClick: =>
+		if not @menu
+			@menu = new Menu()
+		@menu.items = []
+		@menu.items.push ["Delete file", @handleMenuDeleteClick]
+		@menu.toggle()
+
+	handleMenuDeleteClick: =>
+		@deleteFile()
+		return false
+
 	render: ->
 		if @row.stats.bytes_downloaded
 			ratio = @row.stats.uploaded / @row.stats.bytes_downloaded
@@ -99,7 +111,7 @@ class File
 		else
 			type = "other"
 
-		peer_num = Math.max(@row.stats.peer_seed + @row.stats.peer_leech, @row.stats.peer or 0)
+		peer_num = Math.max((@row.stats.peer_seed + @row.stats.peer_leech) or 0, @row.stats.peer or 0)
 		low_seeds = @row.stats.peer_seed <= peer_num * 0.1 and @row.stats.peer_leech >= peer_num * 0.2
 
 		h("div.file.#{type}", {key: @row.id, enterAnimation: Animation.slideDown, exitAnimation: Animation.slideUp},
@@ -135,6 +147,11 @@ class File
 						],
 						Text.formatSize(@row.size)
 					]),
+					if @status != "inactive"
+						[
+							h("a.menu-button", {href: "#Menu", onclick: Page.returnFalse, onmousedown: @handleMenuClick}, "\u22EE")
+							if @menu then @menu.render(".menu-right")
+						]
 					h("span.detail.added", {title: Time.date(@row.date_added, "long")}, Time.since(@row.date_added)),
 					h("span.detail.uploader", [
 						"by ",

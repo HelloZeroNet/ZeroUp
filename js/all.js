@@ -1719,6 +1719,143 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 }).call(this);
 
 
+/* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/utils/Menu.coffee ---- */
+
+
+(function() {
+  var Menu,
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  Menu = (function() {
+    function Menu() {
+      this.render = bind(this.render, this);
+      this.renderItem = bind(this.renderItem, this);
+      this.handleClick = bind(this.handleClick, this);
+      this.storeNode = bind(this.storeNode, this);
+      this.toggle = bind(this.toggle, this);
+      this.hide = bind(this.hide, this);
+      this.show = bind(this.show, this);
+      this.visible = false;
+      this.items = [];
+      this.node = null;
+    }
+
+    Menu.prototype.show = function() {
+      var ref;
+      if ((ref = window.visible_menu) != null) {
+        ref.hide();
+      }
+      this.visible = true;
+      return window.visible_menu = this;
+    };
+
+    Menu.prototype.hide = function() {
+      return this.visible = false;
+    };
+
+    Menu.prototype.toggle = function() {
+      if (this.visible) {
+        this.hide();
+      } else {
+        this.show();
+      }
+      return Page.projector.scheduleRender();
+    };
+
+    Menu.prototype.addItem = function(title, cb, selected) {
+      if (selected == null) {
+        selected = false;
+      }
+      return this.items.push([title, cb, selected]);
+    };
+
+    Menu.prototype.storeNode = function(node) {
+      this.node = node;
+      if (this.visible) {
+        node.className = node.className.replace("visible", "");
+        return setTimeout((function() {
+          return node.className += " visible";
+        }), 10);
+      }
+    };
+
+    Menu.prototype.handleClick = function(e) {
+      var cb, i, item, keep_menu, len, ref, selected, title;
+      keep_menu = false;
+      ref = this.items;
+      for (i = 0, len = ref.length; i < len; i++) {
+        item = ref[i];
+        title = item[0], cb = item[1], selected = item[2];
+        if (title === e.target.textContent) {
+          keep_menu = cb(item);
+        }
+      }
+      if (keep_menu !== true) {
+        this.hide();
+      }
+      return false;
+    };
+
+    Menu.prototype.renderItem = function(item) {
+      var cb, href, onclick, selected, title;
+      title = item[0], cb = item[1], selected = item[2];
+      if (typeof selected === "function") {
+        selected = selected();
+      }
+      if (title === "---") {
+        return h("div.menu-item-separator");
+      } else {
+        if (typeof cb === "string") {
+          href = cb;
+          onclick = true;
+        } else {
+          href = "#" + title;
+          onclick = this.handleClick;
+        }
+        return h("a.menu-item", {
+          href: href,
+          onclick: onclick,
+          key: title,
+          classes: {
+            "selected": selected
+          }
+        }, [title]);
+      }
+    };
+
+    Menu.prototype.render = function(class_name) {
+      if (class_name == null) {
+        class_name = "";
+      }
+      if (this.visible || this.node) {
+        return h("div.menu" + class_name, {
+          classes: {
+            "visible": this.visible
+          },
+          afterCreate: this.storeNode
+        }, this.items.map(this.renderItem));
+      }
+    };
+
+    return Menu;
+
+  })();
+
+  window.Menu = Menu;
+
+  document.body.addEventListener("mouseup", function(e) {
+    if (!window.visible_menu || !window.visible_menu.node) {
+      return false;
+    }
+    if (e.target !== window.visible_menu.node.parentNode && e.target.parentNode !== window.visible_menu.node && e.target.parentNode !== window.visible_menu.node.parentNode && e.target.parentNode !== window.visible_menu.node && e.target.parentNode.parentNode !== window.visible_menu.node.parentNode) {
+      window.visible_menu.hide();
+      return Page.projector.scheduleRender();
+    }
+  });
+
+}).call(this);
+
+
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/utils/Text.coffee ---- */
 
 
@@ -2432,6 +2569,8 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
   File = (function() {
     function File(row, item_list) {
       this.item_list = item_list;
+      this.handleMenuDeleteClick = bind(this.handleMenuDeleteClick, this);
+      this.handleMenuClick = bind(this.handleMenuClick, this);
       this.handleOpenClick = bind(this.handleOpenClick, this);
       this.handleNeedClick = bind(this.handleNeedClick, this);
       this.handleTitleSave = bind(this.handleTitleSave, this);
@@ -2441,6 +2580,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       this.deleteFile = bind(this.deleteFile, this);
       this.editable_title = null;
       this.status = "unknown";
+      this.menu = null;
       this.setRow(row);
     }
 
@@ -2475,7 +2615,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       return Page.cmd("optionalFileDelete", this.row.inner_path, (function(_this) {
         return function() {
           return Page.cmd("optionalFileDelete", _this.row.inner_path + ".piecemap.msgpack", function() {
-            return cb(true);
+            return typeof cb === "function" ? cb(true) : void 0;
           });
         };
       })(this));
@@ -2489,7 +2629,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           delete data["files_optional"][_this.row.file_name];
           delete data["files_optional"][_this.row.file_name + ".piecemap.msgpack"];
           return Page.cmd("fileWrite", [_this.row.content_inner_path, Text.fileEncode(data)], function(res) {
-            return cb(res);
+            return typeof cb === "function" ? cb(res) : void 0;
           });
         };
       })(this));
@@ -2503,7 +2643,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           delete data["file"][_this.row.file_name];
           delete data["file"][_this.row.file_name + ".piecemap.msgpack"];
           return Page.cmd("fileWrite", [_this.row.data_inner_path, Text.fileEncode(data)], function(res) {
-            return cb(res);
+            return typeof cb === "function" ? cb(res) : void 0;
           });
         };
       })(this));
@@ -2566,6 +2706,20 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       return false;
     };
 
+    File.prototype.handleMenuClick = function() {
+      if (!this.menu) {
+        this.menu = new Menu();
+      }
+      this.menu.items = [];
+      this.menu.items.push(["Delete file", this.handleMenuDeleteClick]);
+      return this.menu.toggle();
+    };
+
+    File.prototype.handleMenuDeleteClick = function() {
+      this.deleteFile();
+      return false;
+    };
+
     File.prototype.render = function() {
       var ext, low_seeds, peer_num, ratio, ratio_color, ref, ref1, ref2, ref3, style, type;
       if (this.row.stats.bytes_downloaded) {
@@ -2585,7 +2739,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       } else {
         type = "other";
       }
-      peer_num = Math.max(this.row.stats.peer_seed + this.row.stats.peer_leech, this.row.stats.peer || 0);
+      peer_num = Math.max((this.row.stats.peer_seed + this.row.stats.peer_leech) || 0, this.row.stats.peer || 0);
       low_seeds = this.row.stats.peer_seed <= peer_num * 0.1 && this.row.stats.peer_leech >= peer_num * 0.2;
       return h("div.file." + type, {
         key: this.row.id,
@@ -2621,7 +2775,13 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
               seeding: this.status === "seeding"
             },
             style: style
-          }, [this.status === "seeding" ? h("span", "seeding: ") : void 0, this.status === "downloading" || this.status === "partial" ? [h("span.downloaded", Text.formatSize(this.row.stats.bytes_downloaded)), " of "] : void 0, Text.formatSize(this.row.size)]), h("span.detail.added", {
+          }, [this.status === "seeding" ? h("span", "seeding: ") : void 0, this.status === "downloading" || this.status === "partial" ? [h("span.downloaded", Text.formatSize(this.row.stats.bytes_downloaded)), " of "] : void 0, Text.formatSize(this.row.size)]), this.status !== "inactive" ? [
+            h("a.menu-button", {
+              href: "#Menu",
+              onclick: Page.returnFalse,
+              onmousedown: this.handleMenuClick
+            }, "\u22EE"), this.menu ? this.menu.render(".menu-right") : void 0
+          ] : void 0, h("span.detail.added", {
             title: Time.date(this.row.date_added, "long")
           }, Time.since(this.row.date_added)), h("span.detail.uploader", [
             "by ", h("span.username", {
@@ -2643,6 +2803,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
   window.File = File;
 
 }).call(this);
+
 
 
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/List.coffee ---- */
@@ -2689,7 +2850,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
             filter: "",
             limit: 1000
           }, function(stat_res) {
-            var file, i, j, len, len1, stat, stats;
+            var base, base1, base2, file, i, j, len, len1, stat, stats;
             stats = {};
             for (i = 0, len = stat_res.length; i < len; i++) {
               stat = stat_res[i];
@@ -2703,14 +2864,21 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
               file.content_inner_path = "data/users/" + file.directory + "/content.json";
               file.stats = stats[file.inner_path];
               if (file.stats == null) {
-                file.stats = {
-                  "peer": 0
-                };
+                file.stats = {};
+              }
+              if ((base = file.stats).peer == null) {
+                base.peer = 0;
+              }
+              if ((base1 = file.stats).peer_seed == null) {
+                base1.peer_seed = 0;
+              }
+              if ((base2 = file.stats).peer_leech == null) {
+                base2.peer_leech = 0;
               }
             }
             if (order === "peer") {
               files_res.sort(function(a, b) {
-                return b.stats["peer_seed"] + b.stats["peer"] - a.stats["peer"] - a.stats["peer_seed"];
+                return Math.min(5, b.stats["peer_seed"]) + b.stats["peer"] - a.stats["peer"] - Math.min(5, a.stats["peer_seed"]);
               });
             }
             _this.item_list.sync(files_res);
@@ -3025,7 +3193,6 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
   window.Selector = Selector;
 
 }).call(this);
-
 
 
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/Uploader.coffee ---- */

@@ -140,6 +140,28 @@
 
 
 
+/* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/css/Menu.css ---- */
+
+
+.menu {
+	background-color: white; padding: 10px 0px; position: absolute; top: 0px; max-height: 0px; overflow: hidden; -webkit-transform: translate(-100%, -30px); -moz-transform: translate(-100%, -30px); -o-transform: translate(-100%, -30px); -ms-transform: translate(-100%, -30px); transform: translate(-100%, -30px) ; pointer-events: none;
+	-webkit-box-shadow: 0px 2px 8px rgba(0,0,0,0.1); -moz-box-shadow: 0px 2px 8px rgba(0,0,0,0.1); -o-box-shadow: 0px 2px 8px rgba(0,0,0,0.1); -ms-box-shadow: 0px 2px 8px rgba(0,0,0,0.1); box-shadow: 0px 2px 8px rgba(0,0,0,0.1) ; -webkit-border-radius: 2px; -moz-border-radius: 2px; -o-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px ; opacity: 0; -webkit-transition: opacity 0.2s ease-out, transform 1s ease-out, max-height 0.2s ease-in-out; -moz-transition: opacity 0.2s ease-out, transform 1s ease-out, max-height 0.2s ease-in-out; -o-transition: opacity 0.2s ease-out, transform 1s ease-out, max-height 0.2s ease-in-out; -ms-transition: opacity 0.2s ease-out, transform 1s ease-out, max-height 0.2s ease-in-out; transition: opacity 0.2s ease-out, transform 1s ease-out, max-height 0.2s ease-in-out ; z-index: 99;
+	display: inline-block; z-index: 999; margin-top: 50px;
+}
+.menu-right { left: 100% }
+.menu.visible { opacity: 1; max-height: 350px; -webkit-transform: translate(-100%, 0px); -moz-transform: translate(-100%, 0px); -o-transform: translate(-100%, 0px); -ms-transform: translate(-100%, 0px); transform: translate(-100%, 0px) ; -webkit-transition: opacity 0.1s ease-out, transform 0.3s ease-out, max-height 0.3s ease-in-out; -moz-transition: opacity 0.1s ease-out, transform 0.3s ease-out, max-height 0.3s ease-in-out; -o-transition: opacity 0.1s ease-out, transform 0.3s ease-out, max-height 0.3s ease-in-out; -ms-transition: opacity 0.1s ease-out, transform 0.3s ease-out, max-height 0.3s ease-in-out; transition: opacity 0.1s ease-out, transform 0.3s ease-out, max-height 0.3s ease-in-out ; pointer-events: all }
+
+.menu-item { display: block; text-decoration: none; color: black; padding: 6px 24px; -webkit-transition: all 0.2s; -moz-transition: all 0.2s; -o-transition: all 0.2s; -ms-transition: all 0.2s; transition: all 0.2s ; border-bottom: none; font-weight: normal; padding-left: 32px; white-space: nowrap; font-size: 16px }
+.menu-item-separator { margin-top: 3px; margin-bottom: 3px; border-top: 1px solid #eee }
+
+.menu-item:hover { background-color: #F6F6F6; -webkit-transition: none; -moz-transition: none; -o-transition: none; -ms-transition: none; transition: none ; color: inherit; cursor: pointer; color: black; text-decoration: none }
+.menu-item:active, .menu-item:focus { background-color: #AF3BFF; color: white; -webkit-transition: none ; -moz-transition: none ; -o-transition: none ; -ms-transition: none ; transition: none  }
+.menu-item.selected:before {
+	content: "L"; display: inline-block; -webkit-transform: rotateZ(45deg) scaleX(-1); -moz-transform: rotateZ(45deg) scaleX(-1); -o-transform: rotateZ(45deg) scaleX(-1); -ms-transform: rotateZ(45deg) scaleX(-1); transform: rotateZ(45deg) scaleX(-1) ; line-height: 15px;
+	font-weight: bold; position: absolute; margin-left: -14px; font-size: 12px; margin-top: 2px;
+}
+
+
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/css/ZeroUp.css ---- */
 
 
@@ -240,7 +262,7 @@ textarea:focus { outline: none; border-color: #AAA }
 .List .files { min-width: 600px; padding: 15px; background-color: white }
 .List .files .header { border: 0px; -webkit-box-shadow: none; -moz-box-shadow: none; -o-box-shadow: none; -ms-box-shadow: none; box-shadow: none ; padding-bottom: 17px; padding-top: 0px; }
 .List .files .header .stats-col { font-size: 11px; font-weight: normal; letter-spacing: 0.5px; font-family: Consolas, Monaco, monospace; color: #888; text-transform: uppercase; }
-.List .file { border-bottom: 1px solid #eaf0f5; padding-bottom: 15px; -webkit-box-shadow: 0px 7px 15px -10px #DDD; -moz-box-shadow: 0px 7px 15px -10px #DDD; -o-box-shadow: 0px 7px 15px -10px #DDD; -ms-box-shadow: 0px 7px 15px -10px #DDD; box-shadow: 0px 7px 15px -10px #DDD ; padding-top: 20px; clear: both }
+.List .file { border-bottom: 1px solid #eaf0f5; padding-bottom: 15px; -webkit-box-shadow: 0px 7px 15px -10px #DDD; -moz-box-shadow: 0px 7px 15px -10px #DDD; -o-box-shadow: 0px 7px 15px -10px #DDD; -ms-box-shadow: 0px 7px 15px -10px #DDD; box-shadow: 0px 7px 15px -10px #DDD ; padding-top: 20px; clear: both; position: relative; }
 .List .file:last-child { -webkit-box-shadow: none; -moz-box-shadow: none; -o-box-shadow: none; -ms-box-shadow: none; box-shadow: none ; border: none; margin-bottom: 0px }
 /*.List .file .type {
 	background: -webkit-linear-gradient(45deg, #F44336, #E91E63);background: -moz-linear-gradient(45deg, #F44336, #E91E63);background: -o-linear-gradient(45deg, #F44336, #E91E63);background: -ms-linear-gradient(45deg, #F44336, #E91E63);background: linear-gradient(45deg, #F44336, #E91E63); display: inline-block; float: left; padding: 18px 0px; width: 120px; text-align: center;
@@ -257,7 +279,7 @@ textarea:focus { outline: none; border-color: #AAA }
 	font-size: 18px; color: #4c31ff; text-decoration: none; border-bottom: 2px solid transparent; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; -o-transition: all 0.3s; -ms-transition: all 0.3s; transition: all 0.3s ;
 	white-space: nowrap; max-width: 100%; display: table-caption; text-overflow: ellipsis;
 }
-.List .file .left-info { display: inline-block; width: calc(100% - 270px); padding-top: 5px; padding-left: 5px; margin-left: -5px; margin-top: -5px; overflow: hidden }
+.List .file .left-info { display: inline-block; width: calc(100% - 275px); padding-top: 5px; padding-left: 5px; margin-left: -5px; margin-top: -5px; overflow: hidden }
 .List .file .editable { width: 100%; display: block; }
 .List .file textarea { font-size: 18px; }
 .List .file .title:hover { border-color: #4c31ff; -webkit-transition: none ; -moz-transition: none ; -o-transition: none ; -ms-transition: none ; transition: none  }
@@ -275,7 +297,7 @@ textarea:focus { outline: none; border-color: #AAA }
 
 .List .file .stats { float: right; text-align: right; font-size: 14px; line-height: 26px; font-weight: lighter; letter-spacing: 1px; margin-left: -20px }
 .List .file .stats-col { float: left; margin-left: 20px; width: 95px }
-.List .file .peers { text-align: right; text-transform: uppercase; width: 50px; }
+.List .file .peers { text-align: right; text-transform: uppercase; width: 55px; }
 .List .file .peers .value { margin-left: 5px }
 .List .file .ratio { text-transform: uppercase; width: 20px; }
 .List .file .ratio .value {
@@ -284,6 +306,10 @@ textarea:focus { outline: none; border-color: #AAA }
 }
 .List .file .filename.link { border-bottom: 1px solid #EEE }
 .List .more { text-align: center; display: block; padding: 20px; }
+
+.List .file .menu-button { text-decoration: none; padding: 3px 10px; color: #4c31ff; position: absolute; right: -7px; font-weight: normal; opacity: 0; -webkit-transition: all 0.3s ; -moz-transition: all 0.3s ; -o-transition: all 0.3s ; -ms-transition: all 0.3s ; transition: all 0.3s  }
+.List .file .menu { margin-top: 70px }
+.List .file:hover .menu-button { opacity: 1; -webkit-transition: none ; -moz-transition: none ; -o-transition: none ; -ms-transition: none ; transition: none  }
 
 .drag-over .List { outline: 3px dashed black; opacity: 0.2 }
 #droptext { display: none; position: fixed; text-align: center; margin-top: 230px; color: black; z-index: 99; width: 100%; pointer-events: none }
