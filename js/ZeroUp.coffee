@@ -120,6 +120,9 @@ class ZeroUp extends ZeroFrame
 			params[key] = val
 		return "?"+Text.queryEncode(params)
 
+	returnFalse: ->
+		return false
+
 
 window.Page = new ZeroUp()
 window.Page.createProjector()
