@@ -7,13 +7,13 @@ class List extends Class
 		@type = "Popular"
 		@limit = 10
 
-
 	needFile: =>
 		@log args
 		return false
 
 	update: =>
 		@log "update"
+		@loaded = false
 
 		if @type == "Popular"
 			order = "peer"
@@ -41,6 +41,12 @@ class List extends Class
 					files_res.sort (a,b) ->
 						return Math.min(5, b.stats["peer_seed"]) + b.stats["peer"] - a.stats["peer"] - Math.min(5, a.stats["peer_seed"])
 
+				if @type == "Seeding"
+					files_res = (file for file in files_res when file.stats.bytes_downloaded > 0)
+
+				if @type == "My"
+					files_res = (file for file in files_res when file.directory == Page.site_info.auth_address)
+
 				@item_list.sync(files_res)
 				@loaded = true
 				Page.projector.scheduleRender()
@@ -58,6 +64,9 @@ class List extends Class
 			h("div.list-types", [
 				h("a.list-type", {href: "?Popular", onclick: Page.handleLinkClick, classes: {active: @type == "Popular"}}, "Popular"),
 				h("a.list-type", {href: "?Latest", onclick: Page.handleLinkClick, classes: {active: @type == "Latest"}}, "Latest"),
+				h("a.list-type", {href: "?Seeding", onclick: Page.handleLinkClick, classes: {active: @type == "Seeding"}}, "Seeding"),
+				h("a.list-type", {href: "?My", onclick: Page.handleLinkClick, classes: {active: @type == "My"}}, "My uploads"),
+				# h("input.filter", {placeholder: "Filter uploads..."})
 			]),
 			h("a.upload", {href: "#", onclick: Page.selector.handleBrowseClick}, [h("div.icon.icon-upload"), h("span.upload-title", "Upload new file")]),
 			if @files.length then h("div.files", [
@@ -72,7 +81,10 @@ class List extends Class
 					file.render()
 			])
 			if @loaded and not @files.length
-				h("h2", "No files submitted yet")
+				if @type == "Seeding"
+					h("h2", "Not seeded files yet :(")
+				else
+					h("h2", "No files submitted yet")
 			if @files.length > @limit
 				h("a.more.link", {href: "#", onclick: @handleMoreClick}, "Show more...")
 		])

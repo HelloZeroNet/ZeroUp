@@ -87,6 +87,7 @@ class File
 		@menu.items = []
 		@menu.items.push ["Delete file", @handleMenuDeleteClick]
 		@menu.toggle()
+		return false
 
 	handleMenuDeleteClick: =>
 		@deleteFile()
@@ -120,7 +121,7 @@ class File
 					h("span.value", peer_num),
 					h("span.icon.icon-profile", {style: if low_seeds then "background: #f57676" else "background: #666"})
 				]),
-				h("div.stats-col.ratio", h("span.value", {"style": "background-color: #{ratio_color}"}, if ratio >= 10 then ratio.toFixed(0) else ratio.toFixed(1)))
+				h("div.stats-col.ratio", {title: "Hash id: #{@row.stats.hash_id}"}, h("span.value", {"style": "background-color: #{ratio_color}"}, if ratio >= 10 then ratio.toFixed(0) else ratio.toFixed(1)))
 				h("div.stats-col.uploaded", "\u2BA5 #{Text.formatSize(@row.stats.uploaded)}")
 			])
 			if type == "video"

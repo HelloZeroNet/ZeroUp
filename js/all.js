@@ -2712,7 +2712,8 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       }
       this.menu.items = [];
       this.menu.items.push(["Delete file", this.handleMenuDeleteClick]);
-      return this.menu.toggle();
+      this.menu.toggle();
+      return false;
     };
 
     File.prototype.handleMenuDeleteClick = function() {
@@ -2752,7 +2753,9 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           h("span.value", peer_num), h("span.icon.icon-profile", {
             style: low_seeds ? "background: #f57676" : "background: #666"
           })
-        ]), h("div.stats-col.ratio", h("span.value", {
+        ]), h("div.stats-col.ratio", {
+          title: "Hash id: " + this.row.stats.hash_id
+        }, h("span.value", {
           "style": "background-color: " + ratio_color
         }, ratio >= 10 ? ratio.toFixed(0) : ratio.toFixed(1))), h("div.stats-col.uploaded", "\u2BA5 " + (Text.formatSize(this.row.stats.uploaded)))
       ]), type === "video" ? h("a.open", {
@@ -2805,7 +2808,6 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 }).call(this);
 
 
-
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/List.coffee ---- */
 
 
@@ -2839,6 +2841,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
     List.prototype.update = function() {
       var order;
       this.log("update");
+      this.loaded = false;
       if (this.type === "Popular") {
         order = "peer";
       } else {
@@ -2881,6 +2884,32 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
                 return Math.min(5, b.stats["peer_seed"]) + b.stats["peer"] - a.stats["peer"] - Math.min(5, a.stats["peer_seed"]);
               });
             }
+            if (_this.type === "Seeding") {
+              files_res = (function() {
+                var k, len2, results;
+                results = [];
+                for (k = 0, len2 = files_res.length; k < len2; k++) {
+                  file = files_res[k];
+                  if (file.stats.bytes_downloaded > 0) {
+                    results.push(file);
+                  }
+                }
+                return results;
+              })();
+            }
+            if (_this.type === "My") {
+              files_res = (function() {
+                var k, len2, results;
+                results = [];
+                for (k = 0, len2 = files_res.length; k < len2; k++) {
+                  file = files_res[k];
+                  if (file.directory === Page.site_info.auth_address) {
+                    results.push(file);
+                  }
+                }
+                return results;
+              })();
+            }
             _this.item_list.sync(files_res);
             _this.loaded = true;
             return Page.projector.scheduleRender();
@@ -2920,7 +2949,19 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
             classes: {
               active: this.type === "Latest"
             }
-          }, "Latest")
+          }, "Latest"), h("a.list-type", {
+            href: "?Seeding",
+            onclick: Page.handleLinkClick,
+            classes: {
+              active: this.type === "Seeding"
+            }
+          }, "Seeding"), h("a.list-type", {
+            href: "?My",
+            onclick: Page.handleLinkClick,
+            classes: {
+              active: this.type === "My"
+            }
+          }, "My uploads")
         ]), h("a.upload", {
           href: "#",
           onclick: Page.selector.handleBrowseClick
@@ -2930,7 +2971,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
               return file.render();
             };
           })(this))
-        ]) : void 0, this.loaded && !this.files.length ? h("h2", "No files submitted yet") : void 0, this.files.length > this.limit ? h("a.more.link", {
+        ]) : void 0, this.loaded && !this.files.length ? this.type === "Seeding" ? h("h2", "Not seeded files yet :(") : h("h2", "No files submitted yet") : void 0, this.files.length > this.limit ? h("a.more.link", {
           href: "#",
           onclick: this.handleMoreClick
         }, "Show more...") : void 0
@@ -2944,6 +2985,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
   window.List = List;
 
 }).call(this);
+
 
 
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/Selector.coffee ---- */
@@ -3444,6 +3486,10 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
         params[key] = val;
       }
       return "?" + Text.queryEncode(params);
+    };
+
+    ZeroUp.prototype.returnFalse = function() {
+      return false;
     };
 
     return ZeroUp;
