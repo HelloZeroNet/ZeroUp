@@ -2849,9 +2849,18 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       }
       return Page.cmd("dbQuery", "SELECT * FROM file LEFT JOIN json USING (json_id) ORDER BY date_added DESC", (function(_this) {
         return function(files_res) {
+          var filter, orderby;
+          filter = "";
+          orderby = "time_downloaded DESC, peer DESC";
+          if (_this.type === "My") {
+            orderby = "is_downloaded DESC";
+          } else if (_this.type === "Latest") {
+            orderby = "time_added DESC";
+          }
           return Page.cmd("optionalFileList", {
             filter: "",
-            limit: 1000
+            limit: 1000,
+            orderby: orderby
           }, function(stat_res) {
             var base, base1, base2, file, i, j, len, len1, stat, stats;
             stats = {};

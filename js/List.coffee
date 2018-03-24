@@ -21,7 +21,12 @@ class List extends Class
 			order = "date_added"
 
 		Page.cmd "dbQuery", "SELECT * FROM file LEFT JOIN json USING (json_id) ORDER BY date_added DESC", (files_res) =>
-			Page.cmd "optionalFileList", {filter: "", limit: 1000}, (stat_res) =>
+			orderby = "time_downloaded DESC, peer DESC"
+			if @type == "My"
+				orderby = "is_downloaded DESC"
+			else if @type == "Latest"
+				orderby = "time_added DESC"
+			Page.cmd "optionalFileList", {filter: "", limit: 1000, orderby: orderby}, (stat_res) =>
 				stats = {}
 				for stat in stat_res
 					stats[stat.inner_path] = stat
