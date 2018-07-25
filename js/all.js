@@ -2559,6 +2559,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 }).call(this);
 
 
+
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/File.coffee ---- */
 
 
@@ -2743,9 +2744,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       peer_num = Math.max((this.row.stats.peer_seed + this.row.stats.peer_leech) || 0, this.row.stats.peer || 0);
       low_seeds = this.row.stats.peer_seed <= peer_num * 0.1 && this.row.stats.peer_leech >= peer_num * 0.2;
       return h("div.file." + type, {
-        key: this.row.id,
-        enterAnimation: Animation.slideDown,
-        exitAnimation: Animation.slideUp
+        key: this.row.id
       }, h("div.stats", [
         h("div.stats-col.peers", {
           title: "Seeder: " + this.row.stats.peer_seed + ", Leecher: " + this.row.stats.peer_leech
@@ -2794,7 +2793,9 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
             href: "#Open+directory",
             title: "Open directory",
             onclick: this.handleOpenClick
-          }, this.row.file_name)) : h("a.detail.filename", this.row.file_name)
+          }, this.row.file_name)) : h("a.detail.filename", {
+            title: this.row.file_name
+          }, this.row.file_name)
         ])
       ]));
     };
@@ -2822,6 +2823,10 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 
     function List() {
       this.render = bind(this.render, this);
+      this.handleSearchBlur = bind(this.handleSearchBlur, this);
+      this.handleSearchKeyup = bind(this.handleSearchKeyup, this);
+      this.handleSearchInput = bind(this.handleSearchInput, this);
+      this.handleSearchClick = bind(this.handleSearchClick, this);
       this.handleMoreClick = bind(this.handleMoreClick, this);
       this.update = bind(this.update, this);
       this.needFile = bind(this.needFile, this);
@@ -2839,7 +2844,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
     };
 
     List.prototype.update = function() {
-      var order;
+      var order, params, wheres;
       this.log("update");
       this.loaded = false;
       if (this.type === "Popular") {
@@ -2847,10 +2852,18 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       } else {
         order = "date_added";
       }
-      return Page.cmd("dbQuery", "SELECT * FROM file LEFT JOIN json USING (json_id) ORDER BY date_added DESC", (function(_this) {
+      if (this.search) {
+        wheres = "WHERE file.title LIKE :search OR file.file_name LIKE :search";
+        params = {
+          search: "%" + this.search + "%"
+        };
+      } else {
+        wheres = "";
+        params = "";
+      }
+      return Page.cmd("dbQuery", ["SELECT * FROM file LEFT JOIN json USING (json_id) " + wheres + " ORDER BY date_added DESC", params], (function(_this) {
         return function(files_res) {
-          var filter, orderby;
-          filter = "";
+          var orderby;
           orderby = "time_downloaded DESC, peer DESC";
           if (_this.type === "My") {
             orderby = "is_downloaded DESC";
@@ -2932,6 +2945,36 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       return false;
     };
 
+    List.prototype.handleSearchClick = function() {
+      this.is_search_active = true;
+      document.querySelector(".input-search").focus();
+      return false;
+    };
+
+    List.prototype.handleSearchInput = function(e) {
+      this.search = e.currentTarget.value;
+      this.update();
+      return false;
+    };
+
+    List.prototype.handleSearchKeyup = function(e) {
+      if (e.keyCode === 27) {
+        if (!this.search) {
+          this.is_search_active = false;
+        }
+        e.target.value = "";
+        this.search = "";
+        this.update();
+      }
+      return false;
+    };
+
+    List.prototype.handleSearchBlur = function(e) {
+      if (!this.search) {
+        return this.is_search_active = false;
+      }
+    };
+
     List.prototype.render = function() {
       if (this.need_update) {
         this.update();
@@ -2946,7 +2989,17 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
         }
       }, [
         h("div.list-types", [
-          h("a.list-type", {
+          h("a.list-type.search", {
+            href: "#Search",
+            onclick: this.handleSearchClick,
+            classes: {
+              active: this.is_search_active
+            }
+          }, h("div.icon.icon-magnifier"), h("input.input-search", {
+            oninput: this.handleSearchInput,
+            onkeyup: this.handleSearchKeyup,
+            onblur: this.handleSearchBlur
+          })), h("a.list-type", {
             href: "?Popular",
             onclick: Page.handleLinkClick,
             classes: {
@@ -2994,7 +3047,6 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
   window.List = List;
 
 }).call(this);
-
 
 
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/Selector.coffee ---- */

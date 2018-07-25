@@ -148,3 +148,9 @@ textarea:focus { outline: none; border-color: #AAA }
 #droptext { display: none; position: fixed; text-align: center; margin-top: 230px; color: black; z-index: 99; width: 100%; pointer-events: none }
 #droptext .title { font-size: 48px; background-color: #70FCD8; padding: 15px 30px; text-transform: uppercase; display: inline-block; font-weight: lighter; }
 .drag-over #droptext { display: block }
+
+.list-type.search { width: 15px; height: 36px; display: inline-block; border: none; padding: 0px 9px; overflow: hidden; vertical-align: -7px; transition: all 0.3s; }
+.list-type.search:hover { border: none; }
+.list-type.search .input-search { opacity: 0; transition: all 0.3s; border: 0px; outline: none; pointer-events: none; }
+.list-type.search.active { width: 190px; }
+.list-type.search.active .input-search { opacity: 1; padding: 5px 10px; padding-left: 39px; pointer-events: all; }

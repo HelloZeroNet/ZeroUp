@@ -316,6 +316,11 @@ textarea:focus { outline: none; border-color: #AAA }
 #droptext .title { font-size: 48px; background-color: #70FCD8; padding: 15px 30px; text-transform: uppercase; display: inline-block; font-weight: lighter; }
 .drag-over #droptext { display: block }
 
+.list-type.search { width: 15px; height: 36px; display: inline-block; border: none; padding: 0px 9px; overflow: hidden; vertical-align: -7px; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; -o-transition: all 0.3s; -ms-transition: all 0.3s; transition: all 0.3s ; }
+.list-type.search:hover { border: none; }
+.list-type.search .input-search { opacity: 0; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; -o-transition: all 0.3s; -ms-transition: all 0.3s; transition: all 0.3s ; border: 0px; outline: none; pointer-events: none; }
+.list-type.search.active { width: 190px; }
+.list-type.search.active .input-search { opacity: 1; padding: 5px 10px; padding-left: 39px; pointer-events: all; }
 
 
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/css/fonts.css ---- */
@@ -415,3 +420,9 @@ textarea:focus { outline: none; border-color: #AAA }
 	width: 16px; height: 16px; background-repeat: no-repeat; background-position: 6px center;
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAOVBMVEUAAAC9w8e9w8e9w8e9w8e/xMi9w8e9w8e+w8e9w8e9w8e9w8e9w8e9w8e9w8e+w8e/xMi9w8e9w8fvY4+KAAAAEnRSTlMASPv3WQbwOTCkt4/psX4YDMWr+RRCAAAAUUlEQVQY06XLORKAMAxDUTs7kA3d/7AYGju0UfffjIgoHkxm0vB5bZyxKHx9eX0FJw0Y4bcXKQ4/CTtS5yqp5GFFOjGpVGl00k1pNDIb3Nv9AHC7BOZC4ZjvAAAAAElFTkSuQmCC+d0ckOwyAMRVGHUOO0gUyd+P8f7WApz4Iki9wFmyOEATrXLZcFp5LrGogPOxKp6zfFf9fZ1/I/cY7YZSS3U6S3XFZJmGBwL+FuJX/F1K0wUUlZyZGlXgXESthTEs4B8fh7xoVUDPGYJnsfkCRarKAgz8cAKbpD6pqDPz3XB8K6HdUEeN9NAAAAAElFTkSuQmCC);
 }
+
+.icon-magnifier {
+    position: absolute; display: inline-block; background: transparent; -webkit-border-radius: 30px; -moz-border-radius: 30px; -o-border-radius: 30px; -ms-border-radius: 30px; border-radius: 30px ; z-index: 1;
+    height: 9px; width: 9px; border: 1.5px solid currentColor; margin-top: 13px; pointer-events: none; margin-left: 7px;
+}
+.icon-magnifier:after { content: ""; height: 1.8px; width: 6px; background: currentColor; position: absolute; top: 10px; left: 7px; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -o-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg) ; }

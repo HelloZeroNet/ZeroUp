@@ -20,7 +20,14 @@ class List extends Class
 		else
 			order = "date_added"
 
-		Page.cmd "dbQuery", "SELECT * FROM file LEFT JOIN json USING (json_id) ORDER BY date_added DESC", (files_res) =>
+		if @search
+			wheres = "WHERE file.title LIKE :search OR file.file_name LIKE :search"
+			params = {search: "%#{@search}%"}
+		else
+			wheres = ""
+			params = ""
+
+		Page.cmd "dbQuery", ["SELECT * FROM file LEFT JOIN json USING (json_id) #{wheres} ORDER BY date_added DESC", params], (files_res) =>
 			orderby = "time_downloaded DESC, peer DESC"
 			if @type == "My"
 				orderby = "is_downloaded DESC"
@@ -60,6 +67,30 @@ class List extends Class
 		@limit += 20
 		return false
 
+	handleSearchClick: =>
+		@is_search_active = true
+		document.querySelector(".input-search").focus()
+		return false
+
+	handleSearchInput: (e) =>
+		@search = e.currentTarget.value
+		@update()
+		return false
+
+	handleSearchKeyup: (e) =>
+		if e.keyCode == 27 # Esc
+			if not @search
+				@is_search_active = false
+			e.target.value = ""
+			@search = ""
+			@update()
+		return false
+
+	handleSearchBlur: (e) =>
+		if not @search
+			@is_search_active = false
+
+
 	render: =>
 		if @need_update
 			@update()
@@ -67,6 +98,10 @@ class List extends Class
 
 		h("div.List", {ondragenter: document.body.ondragover, ondragover: document.body.ondragover, ondrop: Page.selector.handleFileDrop, classes: {hidden: Page.state.page != "list"}}, [
 			h("div.list-types", [
+				h("a.list-type.search", {href: "#Search", onclick: @handleSearchClick, classes: {active: @is_search_active}},
+					h("div.icon.icon-magnifier"),
+					h("input.input-search", oninput: @handleSearchInput, onkeyup: @handleSearchKeyup, onblur: @handleSearchBlur)
+				),
 				h("a.list-type", {href: "?Popular", onclick: Page.handleLinkClick, classes: {active: @type == "Popular"}}, "Popular"),
 				h("a.list-type", {href: "?Latest", onclick: Page.handleLinkClick, classes: {active: @type == "Latest"}}, "Latest"),
 				h("a.list-type", {href: "?Seeding", onclick: Page.handleLinkClick, classes: {active: @type == "Seeding"}}, "Seeding"),
