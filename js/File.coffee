@@ -115,7 +115,7 @@ class File
 		peer_num = Math.max((@row.stats.peer_seed + @row.stats.peer_leech) or 0, @row.stats.peer or 0)
 		low_seeds = @row.stats.peer_seed <= peer_num * 0.1 and @row.stats.peer_leech >= peer_num * 0.2
 
-		h("div.file.#{type}", {key: @row.id, enterAnimation: Animation.slideDown, exitAnimation: Animation.slideUp},
+		h("div.file.#{type}", {key: @row.id},
 			h("div.stats", [
 				h("div.stats-col.peers", {title: "Seeder: #{@row.stats.peer_seed}, Leecher: #{@row.stats.peer_leech}"}, [
 					h("span.value", peer_num),
