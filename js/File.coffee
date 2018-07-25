@@ -164,7 +164,7 @@ class File
 					if @status == "seeding"
 						h("a.detail", h("a.link.filename", {href: "#Open+directory", title: "Open directory", onclick: @handleOpenClick}, @row.file_name))
 					else
-						h("a.detail.filename", @row.file_name)
+						h("a.detail.filename", {title: @row.file_name}, @row.file_name)
 				])
 			])
 		)
