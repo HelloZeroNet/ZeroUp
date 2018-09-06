@@ -15,7 +15,7 @@
    ".*": {
     "files_allowed": "data.json",
     "max_size": 20000,
-    "max_size_optional": 1000000000
+    "max_size_optional": 1000000000000
    },
    "bitid/.*@zeroid.bit": {"max_size": 40000},
    "bitmsg/.*@zeroid.bit": {"max_size": 15000}
