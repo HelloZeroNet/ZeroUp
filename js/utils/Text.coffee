@@ -154,6 +154,8 @@ class Text
 		return "("+("'#{value}'" for value in values).join(',')+")"
 
 	formatSize: (size) ->
+		if not size
+			return "0 KB"
 		size_mb = size/1024/1024
 		if size_mb >= 1000
 			return (size_mb/1024).toFixed(1)+" GB"
