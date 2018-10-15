@@ -46,6 +46,7 @@ class Bg extends Class
 		return [left, top]
 
 	randomizeAnimation: ->
+		return false
 		for item in @bg_elem.querySelectorAll(".bgitem")
 			item.style.visibility = "visible"
 			interval = 30 + (Math.random() * 60)
