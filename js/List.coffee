@@ -32,8 +32,11 @@ class List extends Class
 			if @type == "My"
 				orderby = "is_downloaded DESC"
 			else if @type == "Latest"
-				orderby = "time_added DESC"
-			Page.cmd "optionalFileList", {filter: "", limit: 1000, orderby: orderby}, (stat_res) =>
+				orderby = "is_downloaded DESC, time_added DESC"
+			else if @type == "Seeding"
+				orderby = "is_downloaded DESC, is_pinned DESC"
+
+			Page.cmd "optionalFileList", {filter: "bigfile", limit: 2000, orderby: orderby}, (stat_res) =>
 				stats = {}
 				for stat in stat_res
 					stats[stat.inner_path] = stat
