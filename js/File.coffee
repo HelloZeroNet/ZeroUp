@@ -20,7 +20,7 @@ class File
 
 		if @row.stats.bytes_downloaded >= @row.size
 			@status = "seeding"
-		else if @row.stats.is_downloading
+		else if @row.stats.is_downloading or @row.stats.is_pinned
 			@status = "downloading"
 		else if 0 < @row.stats.bytes_downloaded < @row.size
 			@status = "partial"
