@@ -71,10 +71,11 @@ class File
 				else
 					cb(false)
 
-	handleNeedClick: =>
+	handleSeedClick: =>
 		@status = "downloading"
 		Page.cmd "fileNeed", @row.inner_path + "|all", (res) =>
 			console.log res
+		Page.cmd "optionalFilePin", @row.inner_path
 		return false
 
 	handleOpenClick: =>
@@ -136,8 +137,8 @@ class File
 					h("a.title.link", {href: @row.inner_path, enterAnimation: Animation.slideDown}, @editable_title?.render(@row.title) or @row.title)
 
 				h("div.details", [
-					if @status in ["inactive", "partial"]
-						h("a.add", {href: "#Add", title: "Download and seed", onclick: @handleNeedClick}, "+ seed")
+					if @status in ["inactive", "partial"] and not @row.stats.is_pinned
+						h("a.add", {href: "#Add", title: "Download and seed", onclick: @handleSeedClick}, "+ seed")
 
 					h("span.size", {classes: {downloading: @status == "downloading", partial: @status == "partial", seeding: @status == "seeding"}, style: style}, [
 						if @status == "seeding"
