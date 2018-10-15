@@ -54,7 +54,7 @@ class List extends Class
 						return Math.min(5, b.stats["peer_seed"]) + b.stats["peer"] - a.stats["peer"] - Math.min(5, a.stats["peer_seed"])
 
 				if @type == "Seeding"
-					files_res = (file for file in files_res when file.stats.bytes_downloaded > 0)
+					files_res = (file for file in files_res when file.stats.bytes_downloaded > 0 or file.stats.is_pinned == 1)
 
 				if @type == "My"
 					files_res = (file for file in files_res when file.directory == Page.site_info.auth_address)
