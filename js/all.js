@@ -163,17 +163,17 @@
   s = Date.now()
   log = (text) ->
   	console.log Date.now()-s, Array.prototype.slice.call(arguments).join(", ")
-  
+
   log "Started"
-  
+
   cmd = (query) ->
   	p = new Promise()
   	setTimeout ( ->
   		p.resolve query+" Result"
   	), 100
   	return p
-  
-  
+
+
   back = cmd("SELECT * FROM message").then (res) ->
   	log res
   	p = new Promise()
@@ -186,13 +186,13 @@
   	return cmd("SELECT * FROM users")
   .then (res) ->
   	log "End result", res
-  
+
   log "Query started", back
-  
-  
+
+
   q1 = cmd("SELECT * FROM anything")
   q2 = cmd("SELECT * FROM something")
-  
+
   Promise.join(q1, q2).then (res1, res2) ->
     log res1, res2
    */
@@ -305,7 +305,7 @@
   window.load = (done, num) ->
     console.log "Loading #{num}...", Date.now()-window.s
     setTimeout (-> done()), 1000
-  
+
   RateLimit 500, window.load, [0] # Called instantly
   RateLimit 500, window.load, [1]
   setTimeout (-> RateLimit 500, window.load, [300]), 300
@@ -2092,6 +2092,9 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 
     Text.prototype.formatSize = function(size) {
       var size_mb;
+      if (!size) {
+        return "0 KB";
+      }
       size_mb = size / 1024 / 1024;
       if (size_mb >= 1000) {
         return (size_mb / 1024).toFixed(1) + " GB";
@@ -2521,6 +2524,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 
     Bg.prototype.randomizeAnimation = function() {
       var bg, i, interval, item, left, len, ref, ref1, results, rotate, scale, top;
+      return false;
       ref = this.bg_elem.querySelectorAll(".bgitem");
       results = [];
       for (i = 0, len = ref.length; i < len; i++) {
@@ -2559,7 +2563,6 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
 }).call(this);
 
 
-
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/File.coffee ---- */
 
 
@@ -2573,7 +2576,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       this.handleMenuDeleteClick = bind(this.handleMenuDeleteClick, this);
       this.handleMenuClick = bind(this.handleMenuClick, this);
       this.handleOpenClick = bind(this.handleOpenClick, this);
-      this.handleNeedClick = bind(this.handleNeedClick, this);
+      this.handleSeedClick = bind(this.handleSeedClick, this);
       this.handleTitleSave = bind(this.handleTitleSave, this);
       this.handleDelete = bind(this.handleDelete, this);
       this.deleteFromDataJson = bind(this.deleteFromDataJson, this);
@@ -2603,7 +2606,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       }
       if (this.row.stats.bytes_downloaded >= this.row.size) {
         return this.status = "seeding";
-      } else if (this.row.stats.is_downloading) {
+      } else if (this.row.stats.is_downloading || this.row.stats.is_pinned) {
         return this.status = "downloading";
       } else if ((0 < (ref = this.row.stats.bytes_downloaded) && ref < this.row.size)) {
         return this.status = "partial";
@@ -2692,13 +2695,14 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
       })(this));
     };
 
-    File.prototype.handleNeedClick = function() {
+    File.prototype.handleSeedClick = function() {
       this.status = "downloading";
       Page.cmd("fileNeed", this.row.inner_path + "|all", (function(_this) {
         return function(res) {
           return console.log(res);
         };
       })(this));
+      Page.cmd("optionalFilePin", this.row.inner_path);
       return false;
     };
 
@@ -2766,10 +2770,10 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           href: this.row.inner_path,
           enterAnimation: Animation.slideDown
         }, ((ref2 = this.editable_title) != null ? ref2.render(this.row.title) : void 0) || this.row.title), h("div.details", [
-          (ref3 = this.status) === "inactive" || ref3 === "partial" ? h("a.add", {
+          ((ref3 = this.status) === "inactive" || ref3 === "partial") && !this.row.stats.is_pinned ? h("a.add", {
             href: "#Add",
             title: "Download and seed",
-            onclick: this.handleNeedClick
+            onclick: this.handleSeedClick
           }, "+ seed") : void 0, h("span.size", {
             classes: {
               downloading: this.status === "downloading",
@@ -2807,6 +2811,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
   window.File = File;
 
 }).call(this);
+
 
 
 /* ---- /1uPLoaDwKzP6MCGoVzw48r4pxawRBdmQc/js/List.coffee ---- */
@@ -2868,11 +2873,13 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           if (_this.type === "My") {
             orderby = "is_downloaded DESC";
           } else if (_this.type === "Latest") {
-            orderby = "time_added DESC";
+            orderby = "is_downloaded DESC, time_added DESC";
+          } else if (_this.type === "Seeding") {
+            orderby = "is_downloaded DESC, is_pinned DESC";
           }
           return Page.cmd("optionalFileList", {
-            filter: "",
-            limit: 1000,
+            filter: "bigfile",
+            limit: 2000,
             orderby: orderby
           }, function(stat_res) {
             var base, base1, base2, file, i, j, len, len1, stat, stats;
@@ -2912,7 +2919,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
                 results = [];
                 for (k = 0, len2 = files_res.length; k < len2; k++) {
                   file = files_res[k];
-                  if (file.stats.bytes_downloaded > 0) {
+                  if (file.stats.bytes_downloaded > 0 || file.stats.is_pinned === 1) {
                     results.push(file);
                   }
                 }
