@@ -4,7 +4,8 @@
  "background-color": "#FFF",
  "clone_root": "template-new",
  "cloned_from": "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
- "description": "",
+ "description": "Demo site for big file support",
+ "favicon": "favicon.png",
  "files": {
   "css/all.css": {
    "sha512": "dfc5bf0f5bfb30c56a0a32adc400b42ccd90a9a795ed122f0310330846c7a174",
