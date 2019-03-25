@@ -62,6 +62,7 @@ class Selector extends Class
 			# Add timestamp to filename if it has low amount of English characters
 			if file_name.replace(/[^A-Za-z0-9]/g, "").length < 20
 				file_name = Time.timestamp() + "-" + file_name
+			file_name = file_name.replace(/\.{2,}/g,".");
 
 			Page.cmd "bigfileUploadInit", ["data/users/" + Page.site_info.auth_address + "/" + file_name, file.size], (init_res) =>
 				formdata = new FormData()
