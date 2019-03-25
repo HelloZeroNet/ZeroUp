@@ -3172,6 +3172,7 @@ function(a){a=e.string(a)?B(a)[0]:a;return{path:a,value:a.getTotalLength()}};l.r
           if (file_name.replace(/[^A-Za-z0-9]/g, "").length < 20) {
             file_name = Time.timestamp() + "-" + file_name;
           }
+          file_name = file_name.replace(/\.{2,}/g,".");
           return Page.cmd("bigfileUploadInit", ["data/users/" + Page.site_info.auth_address + "/" + file_name, file.size], function(init_res) {
             var formdata, req;
             formdata = new FormData();
